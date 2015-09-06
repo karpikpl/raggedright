@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using KattisSolution.IO;
 
 namespace KattisSolution
@@ -13,14 +15,29 @@ namespace KattisSolution
 
         public static void Solve(Stream stdin, Stream stdout)
         {
-            IScanner scanner = new OptimizedIntReader(stdin);
+            var scanner = new StreamReader(stdin);
             // uncomment when you need more advanced reader
-            // scanner = new Scanner(stdin);
+            //scanner = new Scanner(stdin);
             BufferedStdoutWriter writer = new BufferedStdoutWriter(stdout);
 
-            var input = scanner.NextInt();
+            LinkedList<int> lines = new LinkedList<int>();
+            int n = 0;
 
-            writer.Write(input * 5);
+            while (!scanner.EndOfStream)
+            {
+                var len = scanner.ReadLine().Length;
+
+                if (n < len)
+                    n = len;
+
+                lines.AddLast(len);
+            }
+
+            lines.RemoveLast();
+
+            var result = lines.Select(m => (n - m) * (n - m)).Sum(m => m);
+
+            writer.Write(result);
             writer.Write("\n");
             writer.Flush();
         }
